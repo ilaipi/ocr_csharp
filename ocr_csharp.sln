@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ocr_csharp", "ocr_csharp.csproj", "{13461975-232D-46C5-8210-EB53A8783016}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13461975-232D-46C5-8210-EB53A8783016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13461975-232D-46C5-8210-EB53A8783016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13461975-232D-46C5-8210-EB53A8783016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13461975-232D-46C5-8210-EB53A8783016}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F64C0E21-5812-40CB-875D-11E67CE5D5FF}
+	EndGlobalSection
+EndGlobal
