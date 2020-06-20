@@ -213,5 +213,14 @@ namespace ocr
             return image;
         }
         #endregion
+
+        public static void displayImg(string winName, Image<Bgr, byte> image)
+        {
+            CvInvoke.NamedWindow(winName, Emgu.CV.CvEnum.WindowFlags.Normal);
+            CvInvoke.Imshow(winName, image);
+
+            CvInvoke.WaitKey(0);
+            CvInvoke.DestroyWindow(winName);
+        }
     }
 }
