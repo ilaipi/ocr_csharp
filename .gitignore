@@ -4,3 +4,4 @@ bin/
 packages/
 
 Properties/tessdata/*
+.vs/ocr_csharp/v16/.suo
