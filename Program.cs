@@ -14,8 +14,7 @@ namespace ocr
         static void Main(string[] args)
         {
             string imagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "..", "assets", "1234L.jpg");
-            Image file = Image.FromFile(imagePath);
-            Bitmap image = new Bitmap(file);
+            Bitmap image = new Bitmap(imagePath);
 
             Util.Gray(image);
             byte threshold = Util.Otsu(image);
@@ -23,38 +22,34 @@ namespace ocr
             Util.Thresholding(image, threshold);
 
             // 这一步调用 ToImage 之后 图片会自动逆时针转90度
-            var image1 = image.ToImage<Bgr, byte>();
-            image1 = image1.Rotate(90, new Bgr(0, 0, 0));
+            Image<Bgr, byte> image1 = image.ToImage<Bgr, byte>();
+            //image1 = image1.Rotate(90, new Bgr(0, 0, 0));
 
-            image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new0.png"));
-
+            //使用高斯滤波去除噪声
             // 这里new Size(3, 3) 的3  很关键，好像太大 太小 都找不对顶点
             CvInvoke.GaussianBlur(image1, image1, new Size(3, 3), 3);
 
-            image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new1.png"));
-           
             Point left = new Point();
             Point right = new Point();
             image1 = Util.FindVertices(image1, ref left, ref right);
-            image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new2.png"));
-            Point[] points = new Point[2];
-            points[0] = left;
-            points[1] = right;
+
+            // 画线 看找到的顶点对不对
+            //Point[] points = new Point[2];
+            //points[0] = left;
+            //points[1] = right;
             //image1.DrawPolyline(points, true, new Bgr(Color.Red), 10);
-            image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new3.png"));
+            //image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new.png"));
 
             Console.WriteLine("1 left: " + left.X + "  " + left.Y);
             Console.WriteLine("1 right: " + right.X + "  " + right.Y);
 
             double angle = Util.getAngleTray(left, right, left, new Point(right.X, left.Y));
-
             Console.WriteLine("angle is: " + angle);
 
             // 旋转
-            image1 = image1.Rotate(angle, new Bgr(0, 0, 0));
-            image1.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new4.png"));
+            image1 = image1.Rotate(90 + angle, new Bgr(0, 0, 0));
 
-
+            // 旋转后的顶点
             image1 = Util.FindVertices(image1, ref left, ref right);
 
             int cutWidth = 700;
@@ -65,7 +60,6 @@ namespace ocr
             Rectangle dest = new Rectangle(0, 0, cutWidth, cutHeight);
             Rectangle source = new Rectangle(left.X + 300, left.Y + 200, cutWidth, cutHeight);
             g.DrawImage(image1.AsBitmap(), dest, source, GraphicsUnit.Pixel);
-            MasterMap.Save(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "new5.png"));
 
             // 这里调用后 图片没有旋转  不知道为什么
             image1 = MasterMap.ToImage<Bgr, byte>();
