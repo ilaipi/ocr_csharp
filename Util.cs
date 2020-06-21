@@ -4,6 +4,7 @@ using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace ocr
         }
         #endregion
 
-        #region 固定阈值 二值化
+        #region Thresholding 固定阈值 二值化
         public static Bitmap Thresholding(Bitmap image, byte threshold)
         {
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
@@ -80,7 +81,7 @@ namespace ocr
         }
         #endregion
 
-        #region otsu阈值法 二值化
+        #region Otsu otsu阈值法 二值化
         public static byte Otsu(Bitmap image)
         {
             byte threshold = 0;
@@ -137,6 +138,7 @@ namespace ocr
         }
         #endregion
 
+        #region getAngleTray 计算直线的倾斜角度
         public static double getAngleTray(Point mac0, Point mac1, Point maxp0, Point maxp1)
         {
             var a = Math.Atan2(mac1.Y - mac0.Y, mac1.X - mac0.X);
@@ -148,8 +150,9 @@ namespace ocr
                 angle += 360;
             return angle;
         }
+        #endregion
 
-        #region FindVertices
+        #region FindVertices  找到关键区域的顶点 矩形区域（4个顶点）
         public static Image<Bgr, byte> FindVertices(Image<Bgr, byte> image, ref Point left, ref Point right)
         {
             #region Canny and edge detection
@@ -163,6 +166,8 @@ namespace ocr
             using (VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint())
             {
                 CvInvoke.FindContours(cannyEdges, contours, null, RetrType.List, ChainApproxMethod.ChainApproxSimple);
+                //给所有的轮廓画上边框，看都有哪些轮廓
+                //CvInvoke.DrawContours(image, contours, -1, new MCvScalar(200, 0, 0), 1);
                 int count = contours.Size;
 
                 for (int i = 0; i < count; i++)
@@ -172,10 +177,10 @@ namespace ocr
                     {
                         CvInvoke.ApproxPolyDP(contour, approxContour, CvInvoke.ArcLength(contour, true) * 0.08, true);
                         var area = CvInvoke.ContourArea(approxContour, false);
-                        //仅考虑面积大于300000的轮廓
+                        //仅考虑面积大于100000的轮廓
                         if (area > 100000)
                         {
-                            if (approxContour.Size == 4) //轮廓有4个顶点
+                            if (approxContour.Size >= 4) //轮廓有4个顶点
                             {
 
                                 Point[] pts = approxContour.ToArray();
@@ -214,6 +219,7 @@ namespace ocr
         }
         #endregion
 
+        #region displayImg 弹窗显示图片
         public static void displayImg(string winName, Image<Bgr, byte> image)
         {
             CvInvoke.NamedWindow(winName, Emgu.CV.CvEnum.WindowFlags.Normal);
@@ -222,5 +228,6 @@ namespace ocr
             CvInvoke.WaitKey(0);
             CvInvoke.DestroyWindow(winName);
         }
+        #endregion
     }
 }

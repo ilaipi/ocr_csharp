@@ -14,7 +14,7 @@ namespace ocr
         static void Main(string[] args)
         {
             string winName = "test-win";
-            string imagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "..", "assets", "1234L.jpg");
+            string imagePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "..", "assets", "1234R.jpg");
             Bitmap image = new Bitmap(imagePath);
 
             Util.Gray(image);
@@ -29,7 +29,7 @@ namespace ocr
 
             //使用高斯滤波去除噪声
             // 这里new Size(3, 3) 的3  很关键，好像太大 太小 都找不对顶点
-            CvInvoke.GaussianBlur(image1, image1, new Size(3, 3), 3);
+            CvInvoke.GaussianBlur(image1, image1, new Size(7, 7), 3);
             Util.displayImg(winName + "2", image1);
 
             Point left = new Point();
